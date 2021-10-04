@@ -11,9 +11,9 @@ namespace Spellmaker
     class FilerWatcher
     {
         private readonly Settings settings;
-        private readonly FileForm1 fileForm;
+        private readonly Spellmaker.fakeGui.FileForm1 fileForm;
 
-        public FilerWatcher(Settings settings, FileForm1 fileForm)
+        public FilerWatcher(Settings settings, Spellmaker.fakeGui.FileForm1 fileForm)
         {
             this.settings = settings;
             this.fileForm = fileForm;

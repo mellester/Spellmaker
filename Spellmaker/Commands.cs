@@ -26,7 +26,7 @@ namespace Spellmaker
 #else
             try{
 #endif
-            var set = Settings.Init(); // getting defualt settings
+            var set = Settings.Init(true , remainingArguments); // getting defualt settings
 
             Console.WriteLine("Done with " + this.Command + " command");
             Console.ReadLine();
@@ -133,7 +133,7 @@ namespace Spellmaker
         {
 #if DEBUG
 
-            var set = Settings.Init(); // getting defualt settings
+            var set = Settings.Init(true, remainingArguments); // getting defualt settings
 
             Console.WriteLine("Done with " + this.Command + " command");
             Console.ReadLine();

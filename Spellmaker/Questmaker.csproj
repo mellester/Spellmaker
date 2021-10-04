@@ -22,7 +22,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>6</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -188,6 +188,9 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Commands.cs" />
+    <Compile Include="fakeGui\CodeFile1.cs" />
+    <Compile Include="fakeGui\FileForm1.cs" />
+    <Compile Include="fakeGui\Form1.cs" />
     <Compile Include="filerWatcher.cs" />
     <Compile Include="Grapich.cs" />
     <Compile Include="Program.cs" />
@@ -206,9 +209,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />
-    <None Include="credentials.json">
+    <Content Include="credentials.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\LocalDatacs.datasource" />
     <None Include="Properties\Settings.settings">

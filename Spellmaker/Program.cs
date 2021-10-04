@@ -14,20 +14,22 @@ namespace Spellmaker
     {
         int Exit = 0;
         private IEnumerable<ConsoleCommand> Commands;
-        private string[] Args;
         private Settings settings;
-        private questGui.Form1 Form;
-        private questGui.FileForm1 fileForm;
+        private Spellmaker.fakeGui.Form1 Form;
+        private Spellmaker.fakeGui.FileForm1 fileForm;
+        public string[] Args;
         private Thread thread1;
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public Program()
+        public Program(bool noGui, string [] Args)
         {
-            this.settings = Settings.Init();
+            this.settings = Settings.Init(noGui, Args);
+            this.Args = Args;
             var settingsData = settings.Primary;
-            Form = new questGui.Form1(settingsData);
+            Form = new Spellmaker.fakeGui.Form1(noGui, settingsData);
             Settings.form = Form;
-            fileForm = new questGui.FileForm1(settingsData);
+            fileForm = new Spellmaker.fakeGui.FileForm1(noGui, settingsData);
+
         }
         [STAThread]
         public static int Main(string[] args)
@@ -35,6 +37,7 @@ namespace Spellmaker
             bool show_help = false;
             List<string> names = new List<string>();
             int repeat = 1;
+            bool noGui =  false;
             OptionSet options = new OptionSet() {
             "Usage: greet [OPTIONS]+ message",
             "Greet a list of individuals with an optional message.",
@@ -43,11 +46,13 @@ namespace Spellmaker
             "Options:",
             { "n|name=", "the {NAME} of of the sheet.",
               v => names.Add (v) },
+            { "no-gui", "Disables the gui",
+              v => noGui = true },
             { "r|repeat=",
                 "the number of {TIMES} to repeat the greeting.\n" +
                     "this must be an integer.",
               (int v) => repeat = v },
-            { "v", "increase nothing",
+            { "v", "does nothing yet",
               v => {  ; } },
             { "h|help",  "show this message and exit",
               v => show_help = v != null },
@@ -56,12 +61,19 @@ namespace Spellmaker
             try
             {
                 extra = options.Parse(args);
+                var length = "1suImPSisAvCgPiN6DlqDfaQbNPCx0HjpqtCbyi4Ifss".Length;
+                var index = extra.FindIndex(x => x.Length == length);/*
+                if (extra.Count != 0 && index == -1) {
+                    throw new OptionException("unkown option \"" + extra[0] + "\"", extra[0]);
+                }*/
             }
             catch (OptionException e)
             {
                 Console.Write("greet: ");
                 Console.WriteLine(e.Message);
-                Console.WriteLine("Try `greet --help' for more information.");
+                string currentExecutable =
+System.AppDomain.CurrentDomain.FriendlyName;
+                Console.WriteLine($"Try `{currentExecutable} --help' for more information.");
                 return 1;
             }
             Grapich.Do();
@@ -71,10 +83,9 @@ namespace Spellmaker
                 return 0;
             };
 
-            var program = new Program();
+            var program = new Program(noGui, args);
             XmlConfigurator.Configure();
             program.Commands = GetCommands();
-            program.Args = args;
             log.Info("starting program with args: " + String.Join(" ",args));
             SettingsData.refreshImage += SingleCard.SingleQuestEvent;
             Console.WriteLine("Starting Gui");
@@ -105,8 +116,11 @@ namespace Spellmaker
             Drive.Show();
             if (names.Count == 0)
                 names = Settings.Instance.Primary.defaultSheets;
-            program.Gui(names);
 
+              program.Gui(names);
+
+            
+            
             
             //thread.Join();
             
@@ -125,11 +139,12 @@ namespace Spellmaker
             }
             
             thread1.Start();
-           Application.Run(Form);
+            Form.Run();
+           
         }
         private void Dispatch()
         {
-            Exit = ConsoleCommandDispatcher.DispatchCommand(Commands, Args, Console.Out);
+            Exit = ConsoleCommandDispatcher.DispatchCommand(Commands, this.Args, Console.Out);
             return;
         }
 

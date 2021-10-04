@@ -36,7 +36,7 @@ namespace questGui
                 MessageBox.Show("error empty settings");
             if (SD == null)
             {
-                Downloader = DownloaderAndParser.GetInstance();
+                Downloader = DownloaderAndParser.GetInstance(data.sheetID);
             } else
                 Downloader = SD;
             settingsData = data;
@@ -124,14 +124,18 @@ namespace questGui
         {
             if (names != null)
             {
+                List<string> wrong = new List<string>();
                 foreach (var name in names)
                 {
                     var Tlist = Downloader.spreadSheetItems();
                     if (!Tlist.Contains(name))
                     {
-                        throw new Exception($"Invalid name entered {name}.");
+                        wrong.Add(name);
                     }
-
+                }
+                foreach (var name in wrong)
+                {
+                    names.Remove(name);
                 }
 
                 Downloader.SelectedSheet = new List<string>(names);

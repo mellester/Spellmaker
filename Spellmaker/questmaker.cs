@@ -50,6 +50,7 @@ namespace Spellmaker
         public DoneDeck doneDeck = null;
         static public void Run(Settings settings = null)
         {
+            var Helper = new Spellmaker.fakeGui.Helpers(settings);
             ClearFolder(@".\Images\temp");
             settingsData = settings.Primary;
             List<Questmaker> questmakers = new List<Questmaker>();
@@ -78,7 +79,7 @@ namespace Spellmaker
             }
             MessageBoxResult r = default(MessageBoxResult);
             if (settings.Primary.doneImage.Count > 0)
-                r = MessageBox.Show("Done with my task want me to open up the temp folder?");
+                r = Helper.AskMessage("Done with my task want me to open up the temp folder?");
             else
             {
                 MessageBox.Show("Done with nothing to show for");
